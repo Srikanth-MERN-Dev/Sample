@@ -1,0 +1,15 @@
+.products-menu{
+    display: flex;
+    flex-wrap: wrap;
+    width: 95vw;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+.card-text1{
+    font-size: large;
+    font-weight: 400;
+}
+
+/* admin-page, admin-header, etc. moved to App.css */
