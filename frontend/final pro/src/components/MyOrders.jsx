@@ -88,6 +88,26 @@ const Orders = () => {
           text: "Order is being prepared",
           label: "Preparing",
         };
+      case "Preparing":
+        return {
+          color: "warning",
+          accent: "#fbbf24",
+          bgColor: "rgba(251, 191, 36, 0.1)",
+          borderColor: "#fbbf24",
+          icon: <FaClock />,
+          text: "Order is being prepared",
+          label: "Preparing",
+        };
+      case "On the Way":
+        return {
+          color: "info",
+          accent: "#3b82f6",
+          bgColor: "rgba(59, 130, 246, 0.1)",
+          borderColor: "#3b82f6",
+          icon: <FaTruck />,
+          text: "Order is on the way",
+          label: "On the Way",
+        };
       case "Cancelled":
         return {
           color: "danger",

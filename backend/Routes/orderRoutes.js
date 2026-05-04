@@ -112,7 +112,7 @@ router.get('/', verifyToken, async (req, res) => {
  
 
 //Admin get all orders
-router.get('/admin/all', verifyToken, async(req, res) => {
+router.get('/admin/all', verifyToken, isAdmin, async(req, res) => {
     try{
         const orders = await Order.find()
         //user populate
@@ -134,7 +134,7 @@ router.get('/admin/all', verifyToken, async(req, res) => {
 })
 
 //update order status
-router.put('/admin/status/:id', verifyToken, async (req, res) => {
+router.put('/admin/status/:id', verifyToken, isAdmin, async (req, res) => {
     try{
         const {status} = req.body;
         await Order.findByIdAndUpdate(req.params.id, {status});

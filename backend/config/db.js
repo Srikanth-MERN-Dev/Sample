@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 
+const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017';
 
 //user database
-const userDB = mongoose.createConnection('mongodb://localhost:27017/user')
+const userDB = mongoose.createConnection(`${mongoURI}/user`)
 userDB.on('connected',()=>{
     console.log('user DB Connected');
-    
+
 })
 userDB.on('error',(error)=>{
     console.log(error)
@@ -13,25 +14,23 @@ userDB.on('error',(error)=>{
 
 
 //Products Database
-const productDB = mongoose.createConnection('mongodb://localhost:27017/product')
+const productDB = mongoose.createConnection(`${mongoURI}/product`)
 productDB.on('connected',()=>{
     console.log('product DB Connected')
 })
 productDB.on('error',(error)=>{
     console.log(error)
 })
-
 //orders Database
-const orderDB = mongoose.createConnection('mongodb://localhost:27017/orders')
+const orderDB = mongoose.createConnection(`${mongoURI}/orders`)
 orderDB.on('connected',()=>{
     console.log('Order DB Connected')
 })
 orderDB.on('error',(error)=>{
     console.log(error)
 })
-
 //cart Database
-const cartDB = mongoose.createConnection('mongodb://localhost:27017/cartdb')
+const cartDB = mongoose.createConnection(`${mongoURI}/cartdb`)
 cartDB.on('connected', () => {
     console.log('Cart DB Connected')
 })
