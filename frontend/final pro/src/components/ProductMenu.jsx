@@ -111,24 +111,25 @@ const ProductMenu = () => {
     return (
       <div>
         <Toaster />
-        <h2
-          className="text-center fw-bold mt-3 text-decoration-underline"
-          data-aos="fade-down"
-        >
-          Menu
-        </h2>
-        <center>
-          <input
-          style={{borderRadius: "30px"}}
-            type="text"
-            placeholder=" 🔍 Search Product......."
-            value={search}
-            onChange={handleSearch}
-            className="search-input me-2 mt-2 w-75 px-5 py-2 "
-            data-aos="fade-up"
-            data-aos-delay="200"
-          />
-        </center>
+        <div className="menu-header-section" data-aos="fade-down">
+          <div className="menu-header-glow" />
+          <h2 className="menu-title">
+            <span className="menu-title-icon">🍽️</span> Our Menu
+          </h2>
+          <p className="menu-subtitle">Discover delicious vegetarian meals made with love</p>
+        </div>
+        <div className="menu-search-wrapper" data-aos="fade-up" data-aos-delay="200">
+          <div className="menu-search-box">
+            <span className="menu-search-icon">🔍</span>
+            <input
+              type="text"
+              placeholder="Search your favorite dish..."
+              value={search}
+              onChange={handleSearch}
+              className="menu-search-input"
+            />
+          </div>
+        </div>
         {/* {isLoading && <p className="text-center py-3">Loading products...</p>} */}
         {error && (
           <p className="text-center text-danger py-3">Error: {error}</p>
@@ -144,30 +145,39 @@ const ProductMenu = () => {
               data-aos="zoom-in"
               data-aos-delay={(index % 4) * 100}
             >
-              <div className="card">
-                <img
-                  src={`data:image/png;base64, ${item.image}`}
-                  className="card-img-top"
-                  alt="Food Image"
-                />
+              <div className="card" key={item._id || index}>
+                <div className="card-image-wrapper">
+                  <img
+                    src={`data:image/png;base64, ${item.image}`}
+                    className="card-img-top"
+                    alt="Food Image"
+                  />
+                  {item.actualPrice && item.price < item.actualPrice && (
+                    <div className="card-discount-badge">
+                      {Math.round(((item.actualPrice - item.price) / item.actualPrice) * 100)}% OFF
+                    </div>
+                  )}
+                </div>
                 <div className="card-body">
                   <h3 className="card-title">{item.name}</h3>
                   <p className="card-text">{item.description}</p>
                   <div className="card-price">
-                    <h5 className="card-text text-decoration-line-through text-secondary">
-                      {`₹ ${item.actualPrice}`}
-                    </h5>
-                    <h4 className="card-text">{`₹ ${item.price}`}</h4>
+                    {item.actualPrice && (
+                      <h5 className="card-text text-decoration-line-through text-secondary">
+                        {`₹ ${item.actualPrice}`}
+                      </h5>
+                    )}
+                    <h4 className="card-price-current">{`₹ ${item.price}`}</h4>
                   </div>
                   <div className="card-actions">
                     <button
-                      className="btn btn-success"
+                      className="btn-buy-now"
                       onClick={() => buyNow(item._id)}
                     >
                       Buy Now
                     </button>
                     <button
-                      className="btn btn-outline-success ms-3"
+                      className="btn-add-cart"
                       onClick={() => addToCart(item._id)}
                     >
                       Add To Cart
