@@ -16,7 +16,7 @@ function App() {
   return (
     <Router>
        <div className="d-flex flex-column min-vh-100">
-        <NavBar />
+        <Navbar />
         <main className="flex-fill">
           <Routes>
             <Route path='/' element={ <Home /> } />
