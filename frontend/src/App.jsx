@@ -1,6 +1,6 @@
 import './App.css'
 import Home from './components/Home'
-import NavBar from './components/NavBar'
+import Navbar from './components/Navbar'
 import AuthPage from './components/AuthPage'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import Footer from './components/footer'

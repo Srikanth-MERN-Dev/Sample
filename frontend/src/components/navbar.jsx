@@ -11,7 +11,7 @@ import { useState } from "react";
 import { BsBagHeartFill } from "react-icons/bs";
 import { RiAdminFill } from "react-icons/ri";
 
-const NavBar = () => {
+const Navbar = () => {
   const location = useLocation();
   const [role, setRole] = useState(null);
 
@@ -82,4 +82,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default Navbar;
