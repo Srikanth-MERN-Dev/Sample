@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaLeaf, FaTruck, FaClock, FaHeart, FaArrowRight, FaStar } from "react-icons/fa";
-import bg from "../assets/newBg2.jpeg";
+import bg from "../assets/newbg2.jpeg";
 
 
 const features = [

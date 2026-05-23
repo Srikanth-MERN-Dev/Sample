@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { BsBagHeartFill } from "react-icons/bs";
 import { RiAdminFill } from "react-icons/ri";
-import Logo from "../assets/newLogo1.jpeg";
+import logo from "../assets/newlogo1.jpeg";
 
 
 
@@ -36,7 +36,7 @@ const Navbar = () => {
         <Nav.Link as={Link} to="/" className="nav-brand-link">
           <div className="nav-brand">
             <div className="nav-logo-wrapper">
-              <img src={Logo} alt="Logo" className="nav-logo-img" />
+              <img src={logo} alt="Logo" className="nav-logo-img" />
               <div className="nav-logo-ring" />
             </div>
             <div className="nav-brand-text">
