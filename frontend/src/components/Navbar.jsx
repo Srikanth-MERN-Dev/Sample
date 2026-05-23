@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { BsBagHeartFill } from "react-icons/bs";
 import { RiAdminFill } from "react-icons/ri";
-import Logo from "../assets/new logo1.jpeg";
+import Logo from "../assets/newLogo1.jpeg";
 
 
 

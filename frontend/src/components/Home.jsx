@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaLeaf, FaTruck, FaClock, FaHeart, FaArrowRight, FaStar } from "react-icons/fa";
-import Bg from "./assets/new bg2.jpeg";
+import bg from "../assets/newBg2.jpeg";
 
 
 const features = [
@@ -61,7 +61,7 @@ const Home = () => {
         <div className="hero-right">
           <div className="hero-visual">
             <div className="hero-image-card hero-image-card-main">
-              <img src={Bg} alt="Delicious food" />
+              <img src={bg} alt="Delicious food" />
               <div className="hero-image-overlay" />
               <div className="hero-floating-badge hero-floating-badge-1">
                 <FaLeaf />
