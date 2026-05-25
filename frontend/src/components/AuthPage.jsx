@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEnvelope, FaLock, FaUser, FaLeaf, FaArrowRight, FaEye, FaEyeSlash, FaUtensils, FaTruck, FaHeart } from "react-icons/fa";
+import { API_URL } from '../config';
 
 const AuthPage = () => {
   const [mode, setMode] = useState("login");
@@ -22,7 +23,7 @@ const AuthPage = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:3000/auth/login", {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -39,7 +40,7 @@ const AuthPage = () => {
       } else {
         alert(data.message || "Login failed");
       }
-    } catch (_err) {
+    } catch (error) {
       alert("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -50,7 +51,7 @@ const AuthPage = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:3000/auth/register", {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -61,7 +62,7 @@ const AuthPage = () => {
         setMode("login");
         resetFields();
       }
-    } catch (_err) {
+    } catch (error) {
       alert("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);

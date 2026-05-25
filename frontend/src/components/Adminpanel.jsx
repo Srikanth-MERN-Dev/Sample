@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { FaClipboardList, FaBoxOpen, FaShieldAlt, FaTruck, FaCheckCircle, FaPlus, FaEdit, FaTrash, FaTimes, FaImage } from "react-icons/fa";
+import { API_URL } from '../config';
 
 const Adminpanel = () => {
   const [tab, setTab] = useState("orders");
@@ -10,7 +11,7 @@ const Adminpanel = () => {
   const token = localStorage.getItem("token");
 
   const getOrders = useCallback(async () => {
-    const res = await fetch("http://localhost:3000/orders/admin/all", {
+    const res = await fetch(`${API_URL}/orders/admin/all`, {
       method: "GET",
       headers: { "Content-Type": "application/json", authorization: token },
     });
@@ -23,7 +24,7 @@ const Adminpanel = () => {
   }, [getOrders]);
 
   const updateStatus = async (id, status) => {
-    await fetch(`http://localhost:3000/orders/admin/status/${id}`, {
+    await fetch(`${API_URL}/orders/admin/status/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", authorization: token },
       body: JSON.stringify({ status }),
@@ -63,7 +64,7 @@ const Adminpanel = () => {
   const role = localStorage.getItem("role");
 
   const getProducts = async () => {
-    const res = await fetch("http://localhost:3000/products");
+    const res = await fetch(`${API_URL}/products`);
     const data = await res.json();
     setProducts(data);
   };
@@ -88,7 +89,7 @@ const Adminpanel = () => {
     formData.append("actualPrice", actualPrice);
     formData.append("image", file);
 
-    const res = await fetch("http://localhost:3000/products", {
+    const res = await fetch(`${API_URL}/products`, {
       method: "POST",
       body: formData,
     });
@@ -108,7 +109,7 @@ const Adminpanel = () => {
     formData.append("price", editPrice);
     formData.append("actualPrice", editActualPrice);
     if (editFile) formData.append("image", editFile);
-    await fetch(`http://localhost:3000/products/${editId}`, {
+    await fetch(`${API_URL}/products/${editId}`, {
       method: "PUT",
       body: formData,
     });
@@ -132,7 +133,7 @@ const Adminpanel = () => {
   const deleteProduct = async (_id) => {
     const confirmDelete = window.confirm("Confirm to Delete");
     if (!confirmDelete) return;
-    await fetch(`http://localhost:3000/products/${_id}`, { method: "DELETE" });
+    await fetch(`${API_URL}/products/${_id}`, { method: "DELETE" });
     toast.success("Product Deleted Successfully");
     setProducts((prev) => prev.filter((item) => item._id !== _id));
   };

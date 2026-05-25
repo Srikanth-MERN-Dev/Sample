@@ -17,6 +17,7 @@ import {
   FaImage,
   FaLeaf,
 } from "react-icons/fa";
+import { API_URL } from '../config';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -28,7 +29,7 @@ const Orders = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch("http://localhost:3000/orders", {
+      const res = await fetch(`${API_URL}/orders`, {
         method: "GET",
         headers: {
           authorization: token,
@@ -53,7 +54,7 @@ const Orders = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/orders/${orderId}/cancel`,
+        `${API_URL}/orders/${orderId}/cancel`,
         {
           method: "DELETE",
           headers: {

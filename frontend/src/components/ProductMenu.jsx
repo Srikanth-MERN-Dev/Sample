@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FourSquare } from "react-loading-indicators";
 import toast, { Toaster } from "react-hot-toast";
 import AOS from "aos";
+import { API_URL } from '../config';
 
 const ProductMenu = () => {
   const [products, setProducts] = useState([]);
@@ -18,7 +19,7 @@ const ProductMenu = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3000/products", { method: "GET" })
+    fetch(`${API_URL}/products`, { method: "GET" })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -44,7 +45,7 @@ const ProductMenu = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/products/search?q=${value}`,
+        `${API_URL}/products/search?q=${value}`,
       );
       const data = await res.json();
       setProducts(data);
@@ -74,7 +75,7 @@ const ProductMenu = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/cart/add", {
+      const res = await fetch(`${API_URL}/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

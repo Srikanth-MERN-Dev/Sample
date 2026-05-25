@@ -14,6 +14,7 @@ import {
   FaSpinner,
   FaImage,
 } from "react-icons/fa";
+import { API_URL } from '../config';
 
 const Checkout = () => {
   const [name, setName] = useState("");
@@ -31,7 +32,7 @@ const Checkout = () => {
 
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/products/${productId}`);
+        const res = await fetch(`${API_URL}/products/${productId}`);
         if (!res.ok) {
           throw new Error("Product not found");
         }
@@ -66,7 +67,7 @@ const Checkout = () => {
         body.productId = productId;
       }
 
-      const res = await fetch("http://localhost:3000/orders/place", {
+      const res = await fetch(`${API_URL}/orders/place`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

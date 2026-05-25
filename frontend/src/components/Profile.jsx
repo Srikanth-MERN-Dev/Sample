@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { FaUser, FaEnvelope, FaShieldAlt, FaPen, FaSignOutAlt, FaSave, FaTimes, FaLeaf, FaUtensils, FaTruck, FaHeart } from "react-icons/fa";
+import { API_URL } from '../config';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -13,7 +14,7 @@ const Profile = () => {
   const token = localStorage.getItem("token");
 
   const fetchProfile = async () => {
-    const res = await fetch("http://localhost:3000/auth/register", {
+    const res = await fetch(`${API_URL}/auth/register`, {
       method: "GET",
       headers: { authorization: token },
     });
@@ -31,7 +32,7 @@ const Profile = () => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:3000/auth/register", {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", authorization: token },
         body: JSON.stringify({ name, email }),
@@ -40,7 +41,7 @@ const Profile = () => {
       toast.success("Profile Updated");
       setUser(data.user);
       setEdit(false);
-    } catch (_err) {
+    } catch (error) {
       toast.error("Update failed");
     } finally {
       setIsLoading(false);
