@@ -114,19 +114,47 @@ router.get('/', verifyToken, async (req, res) => {
 //Admin get all orders
 router.get('/admin/all', verifyToken, isAdmin, async(req, res) => {
     try{
-        const orders = await Order.find()
-        //user populate
-        .populate({
-            path: "userId",
-            model: User,
-            select: "name"
-        })
-        //Product populate
-        .populate({
-            path: "products.productId",
-            model: Product,
-        });
-        res.json(orders);
+        const orders = await Order.find();
+        
+        //Manually populate user and product details from different databases
+        const populatedOrders = await Promise.all(
+            orders.map(async (order) => {
+                try {
+                    //Fetch user details
+                    const user = await User.findById(order.userId);
+                    
+                    //Fetch product details for each product in order
+                    const populatedProducts = await Promise.all(
+                        order.products.map(async (item) => {
+                            try {
+                                const product = await Product.findById(item.productId);
+                                return {
+                                    ...item.toObject(),
+                                    productId: product || { name: "Product not found", price: 0, image: null }
+                                };
+                            } catch(error) {
+                                console.log(`Error fetching product ${item.productId}:`, error);
+                                return {
+                                    ...item.toObject(),
+                                    productId: { name: "Product not found", price: 0, image: null }
+                                };
+                            }
+                        })
+                    );
+                    
+                    return {
+                        ...order.toObject(),
+                        userId: user ? { _id: user._id, name: user.name } : { name: "User not found" },
+                        products: populatedProducts
+                    };
+                } catch(error) {
+                    console.log(`Error processing order ${order._id}:`, error);
+                    return order.toObject();
+                }
+            })
+        );
+        
+        res.json(populatedOrders);
     }
     catch(error){
         res.status(500).json({ message: error.message})
