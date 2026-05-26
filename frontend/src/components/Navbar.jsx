@@ -1,4 +1,3 @@
-import Nav from "react-bootstrap/Nav";
 import { Link, useLocation } from "react-router-dom";
 import { SiGnuprivacyguard } from "react-icons/si";
 import { MdRestaurantMenu } from "react-icons/md";
@@ -6,83 +5,198 @@ import { ImCart } from "react-icons/im";
 import { FaHome } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { jwtDecode } from "jwt-decode";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { BsBagHeartFill } from "react-icons/bs";
 import { RiAdminFill } from "react-icons/ri";
 import logo from "../assets/newlogo1.jpeg";
 
-
-
+const navItems = [
+  { path: "/", label: "Home", icon: FaHome },
+  { path: "/productmenu", label: "Menu", icon: MdRestaurantMenu },
+  { path: "/orders", label: "Orders", icon: BsBagHeartFill },
+  { path: "/cart", label: "Cart", icon: ImCart },
+  { path: "/profile", label: "Profile", icon: CgProfile },
+  { path: "/login", label: "Login", icon: SiGnuprivacyguard },
+];
 
 const Navbar = () => {
   const location = useLocation();
   const [role, setRole] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decoded = jwtDecode(token);
-      setRole(decoded.role);
-    }
+    const checkUserRole = () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          setRole(decoded.role);
+        } catch (error) {
+          console.error("Token decode error:", error);
+          setRole(null);
+        }
+      } else {
+        setRole(null);
+      }
+    };
+
+    checkUserRole();
+  }, [location.pathname]);
+
+  // Listen for token changes (login/logout)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          setRole(decoded.role);
+        } catch (error) {
+          console.error("Token decode error:", error);
+          setRole(null);
+        }
+      } else {
+        setRole(null);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  const isActive = (path) =>
-    location.pathname === path ? "nav-link1 active-link" : "nav-link1";
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target)
+      ) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
+  const isActive = (path) => location.pathname === path;
+
+  const displayItems =
+    role === "admin"
+      ? [...navItems, { path: "/adminpanel", label: "Admin", icon: RiAdminFill }]
+      : navItems;
 
   return (
-    <nav className="navbar navbar-expand-lg sticky-top">
-      <div className="navbar-container container-fluid">
-        <Nav.Link as={Link} to="/" className="nav-brand-link">
-          <div className="nav-brand">
-            <div className="nav-logo-wrapper">
-              <img src={logo} alt="Logo" className="nav-logo-img" />
-              <div className="nav-logo-ring" />
+    <>
+      {/* Fixed Navbar */}
+      <nav className={`navbar-v2 ${scrolled ? "navbar-v2-scrolled" : ""}`}>
+        <div className="navbar-v2-container">
+          {/* Logo - Single Instance */}
+          <Link to="/" className="navbar-v2-brand-link">
+            <div className="navbar-v2-brand">
+              <div className="navbar-v2-logo-wrapper">
+                <img
+                  src={logo}
+                  alt="Healthy Food Logo"
+                  className="navbar-v2-logo"
+                />
+                <div className="navbar-v2-logo-glow" />
+              </div>
+
+              {/* Brand Text - Hidden on Small Screens */}
+              <div className="navbar-v2-brand-text">
+                <span className="navbar-v2-brand-name">Healthy Food</span>
+                <span className="navbar-v2-brand-tagline">Fresh & Healthy</span>
+              </div>
             </div>
-            <div className="nav-brand-text">
-              <span className="nav-brand-name">Healthy Food</span>
-              <span className="nav-brand-tagline">Fresh & Healthy</span>
-            </div>
+          </Link>
+
+          {/* Desktop Navigation - Hidden on Mobile */}
+          <div className="navbar-v2-desktop-menu">
+            {displayItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`navbar-v2-link ${isActive(item.path) ? "active" : ""}`}
+              >
+                <item.icon className="navbar-v2-icon" />
+                <span>{item.label}</span>
+              </Link>
+            ))}
           </div>
-        </Nav.Link>
 
-        <label className="hamburger navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-          <input type="checkbox" />
-          <svg viewBox="0 0 32 32">
-            <path className="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
-            <path className="line" d="M7 16 27 16" />
-          </svg>
-        </label>
+          {/* Mobile Menu Button - Visible on Mobile */}
+          <button
+            ref={buttonRef}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className={`navbar-v2-hamburger ${mobileMenuOpen ? "open" : ""}`}
+            aria-label="Toggle menu"
+          >
+            <span className="navbar-v2-hamburger-line" />
+            <span className="navbar-v2-hamburger-line" />
+            <span className="navbar-v2-hamburger-line" />
+          </button>
+        </div>
+      </nav>
 
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <Nav className="ms-auto gap-1">
-            <Nav.Link as={Link} to="/" className={isActive("/")}>
-              <FaHome /> <span>Home</span>
-            </Nav.Link>
-            <Nav.Link as={Link} to="/login" className={isActive("/login")}>
-              <SiGnuprivacyguard /> <span>Login</span>
-            </Nav.Link>
-            <Nav.Link as={Link} to="/productmenu" className={isActive("/productmenu")}>
-              <MdRestaurantMenu /> <span>Menu</span>
-            </Nav.Link>
-            <Nav.Link as={Link} to="/profile" className={isActive("/profile")}>
-              <CgProfile /> <span>Profile</span>
-            </Nav.Link>
-            <Nav.Link as={Link} to="/cart" className={isActive("/cart")}>
-              <ImCart /> <span>Cart</span>
-            </Nav.Link>
-            {role === "admin" && (
-              <Nav.Link as={Link} to="/adminpanel" className={isActive("/adminpanel")}>
-                <RiAdminFill /> <span>Admin</span>
-              </Nav.Link>
-            )}
-            <Nav.Link as={Link} to="/orders" className={isActive("/orders")}>
-              <BsBagHeartFill /> <span>Orders</span>
-            </Nav.Link>
-          </Nav>
+      {/* Backdrop Overlay - Mobile Only */}
+      {mobileMenuOpen && (
+        <div
+          className="navbar-v2-backdrop"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile Menu - Slide Down Animation */}
+      <div
+        ref={menuRef}
+        className={`navbar-v2-mobile-menu ${mobileMenuOpen ? "open" : ""}`}
+      >
+        <div className="navbar-v2-mobile-menu-content">
+          {displayItems.map((item, index) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`navbar-v2-mobile-link ${isActive(item.path) ? "active" : ""}`}
+              style={{
+                transitionDelay: mobileMenuOpen ? `${index * 30}ms` : "0ms",
+              }}
+            >
+              <item.icon className="navbar-v2-mobile-icon" />
+              <span>{item.label}</span>
+            </Link>
+          ))}
         </div>
       </div>
-    </nav>
+
+      {/* Spacer to prevent content overlap */}
+      <div style={{ height: "64px" }} />
+    </>
   );
 };
 
